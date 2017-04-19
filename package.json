@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "David Daniel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavideDaniel/react-ducks-gen"
+  },
   "bin": {
     "gen": "cli.js"
   },
