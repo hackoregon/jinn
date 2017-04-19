@@ -1,0 +1,30 @@
+/*
+ * {{ properCase name }} story
+ *
+ * A react-storybook story for the {{ properCase name }} component
+ */
+
+ import React from 'react'
+ import { storiesOf } from '@kadira/storybook'
+ import {{ properCase name }} from './component'
+
+ const displayName = {{ properCase name }}.displayName || '{{ properCase name }}'
+ const title = 'Simple usage'
+ const description = `
+   This is some basic usage with the {{ properCase name }} component.
+   More to come later.`
+
+ const demoCode = () => (
+   <{{ properCase name }} />
+ )
+
+ const propDocs = { inline: true, propTables: [{{ properCase name }}] }
+
+ storiesOf(displayName, module)
+   .addWithInfo(
+     title,
+     description,
+     demoCode,
+     propDocs
+   )
+

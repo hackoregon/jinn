@@ -1,0 +1,17 @@
+node_modules/
+dist/
+public/
+
+reports/
+npm-debug.log
+
+.nyc_output
+.qma
+.DS_Store
+.dev
+
+archive.tar.gz
+*build.tar.gz
+metrics.json
+*.log*
+pra.md

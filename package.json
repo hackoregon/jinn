@@ -1,0 +1,69 @@
+{
+  "name": "react-ducks-gen",
+  "version": "0.0.1",
+  "description": "Deals with boilerplate for react redux projects",
+  "main": "index.js",
+  "author": "David Daniel",
+  "license": "MIT",
+  "bin": {
+    "gen": "cli.js"
+  },
+  "scripts": {
+    "gen": "plop --plopfile lib/index.js",
+    "test": "NODE_ENV=TEST mocha --opts ./mocha.opts './lib/**/*.test.js'",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore",
+    "lint:js": "npm run lint:eslint -- . ",
+    "watch": "npm test --watch"
+  },
+  "dependencies": {
+    "app-root-dir": "^1.0.2",
+    "inquirer": "^3.0.6",
+    "node-plop": "^0.5.5",
+    "plop": "^1.7.4"
+  },
+  "babel": {
+    "presets": [
+      [
+        "latest",
+        {
+          "es2015": {
+            "modules": false
+          }
+        }
+      ],
+      "react",
+      "stage-0"
+    ],
+    "env": {
+      "production": {
+        "only": [
+          "app"
+        ],
+        "plugins": [
+          "transform-react-remove-prop-types",
+          "transform-react-constant-elements",
+          "transform-react-inline-elements"
+        ]
+      },
+      "test": {
+        "plugins": [
+          "transform-es2015-modules-commonjs",
+          "dynamic-import-node"
+        ]
+      }
+    }
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.2",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^3.2.0"
+  }
+}

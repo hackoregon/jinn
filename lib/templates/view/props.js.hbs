@@ -1,0 +1,8 @@
+// import { actionDispatcher } from 'actions'
+// import selectors from 'selectors'
+
+export const mapStateToProps = state => ({
+  propName: selectors.propName(state)
+})
+
+// export const mapDispatchToProps = { actionDispatcher }
