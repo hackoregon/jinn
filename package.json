@@ -1,5 +1,5 @@
 {
-  "name": "react-ducks-gen",
+  "name": "@hackoregon/jinn",
   "version": "0.0.1",
   "description": "Deals with boilerplate for react redux projects",
   "main": "lib/index.js",
@@ -10,10 +10,9 @@
     "url": "https://github.com/DavideDaniel/react-ducks-gen"
   },
   "bin": {
-    "gen": "cli.js"
+    "jinn": "cli.js"
   },
   "scripts": {
-    "gen": "plop --plopfile lib/index.js",
     "test": "NODE_ENV=TEST mocha --opts ./mocha.opts './lib/**/*.test.js'",
     "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore",

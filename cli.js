@@ -6,6 +6,7 @@ const promisify = require('pify')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
+const execSync = require('child_process').execSync
 
 const _readFile = promisify(fs.readFile)
 const _writeFile = promisify(fs.writeFile)
@@ -14,21 +15,22 @@ const mkdir = promisify(mkdirp)
 
 const appName = require('./lib/utils/rootPkgName')
 const appRoot = require('app-root-dir').get()
+const log = require('./logger.js')
 
 const pkgVersion = require(path.resolve(__dirname, 'package.json')).version
 
 const helpText = `
-    react-ducks-gen v${pkgVersion}
+    jinn v${pkgVersion}
 
     Usage
-      $ gen <cmd> <options>
+      $ jinn <cmd> <options>
 
     Commands
-      -g                        generate .genrc file with view and state paths
+      -g                        generate .jinnrc file with view and state paths
       -h, --help                show help menu
       -v, --view <name> <type>  generate <type>[func, class, pure] view template with specified <name>
       -d, --duck <options>      generate duck template with <options>
-      -version                  get gen package version
+      -version                  get jinn package version
 
     Options
       -a, --all                 option to generate with story, css and connected version
@@ -38,9 +40,9 @@ const helpText = `
       -x                        option to add connected version of component to view template
 
     Examples
-      gen -v Button func -a     generate boilerplate for a Button functional component with all options
-      gen -v Cart class -c      generate boilerplate Cart class component with css modules
-      gen -d App                generate boilerplate for App duck
+      jinn -v Button func -a     generate boilerplate for a Button functional component with all options
+      jinn -v Cart class -c      generate boilerplate Cart class component with css modules
+      jinn -d App                generate boilerplate for App duck
 `
 
 const minimistOpts = {
@@ -60,48 +62,53 @@ const fileExists = path => _access(path).then(() => true, () => false)
 const readFile = path => _readFile(path, 'utf8')
 const writeFile = (path, data) => _writeFile(path, data, 'utf8')
 
-const genrcDefault = {
+const jinnrcDefault = {
   viewFolder: path.resolve(appRoot, `src/${appName}/view`),
   stateFolder: path.resolve(appRoot, `src/${appName}/state`)
 }
 
-const genrcPath = path.resolve(appRoot, '.genrc')
+const jinnrcPath = path.resolve(appRoot, '.jinnrc')
 
-let viewPath = genrcDefault.viewFolder
-let statePath = genrcDefault.stateFolder
+let viewPath = jinnrcDefault.viewFolder
+let statePath = jinnrcDefault.stateFolder
 
-fileExists(genrcPath)
+if (argv.p) {
+  execSync('./node_modules/.bin/plop --plopfile ./lib/index.js', {stdio: [0, 1, 2]})
+}
+
+if (argv.h || argv.help) {
+  log.success(helpText)
+}
+
+if (argv.j) {
+  log.info(`Writing jinnrc with defaults at ${appRoot}/.jinnrc`)
+  writeFile(jinnrcPath, JSON.stringify(jinnrcDefault), 'utf-8')
+}
+
+if (argv.v || argv.d) {
+  hb.registerHelper('upperCase', changeCase.upperCase)
+  hb.registerHelper('properCase', changeCase.pascalCase)
+  hb.registerHelper('camelCase', changeCase.camelCase)
+  hb.registerHelper('curly', (object, open) => (open ? '{' : '}'))
+}
+
+const destPath = (type, name) => {
+  switch (type) {
+    case 'view': return path.join(viewPath, name)
+    case 'state':
+    default: return path.join(statePath, name)
+  }
+}
+
+const templatePath = (type, file) => path.join(__dirname, 'lib/templates', type, file)
+const logSuccess = (type, filePath) => log.success(`Succesfully wrote ${type} boilerplate to ${filePath}`)
+
+fileExists(jinnrcPath)
     .then(exists => {
       if (!exists) {
-        console.log('No .genrc file exists. Create one with -g flag. Modify as needed.')
-        console.log('Writing view files to ', viewPath)
-        console.log('Writing state files to ', statePath)
-        if (argv.h || argv.help) {
-          console.log(helpText)
-        }
-
-        if (argv.g) {
-          console.log('Writing genrc with defaults at ', `${appRoot}/.genrc`)
-          writeFile(genrcPath, JSON.stringify(genrcDefault), 'utf-8')
-        }
-
-        const destPath = (type, name) => {
-          switch (type) {
-            case 'view': return path.join(viewPath, name)
-            case 'state':
-            default: return path.join(statePath, name)
-          }
-        }
-
-        if (argv.v || argv.d) {
-          hb.registerHelper('upperCase', changeCase.upperCase)
-          hb.registerHelper('properCase', changeCase.pascalCase)
-          hb.registerHelper('camelCase', changeCase.camelCase)
-          hb.registerHelper('curly', (object, open) => (open ? '{' : '}'))
-        }
+        log.warn('No .jinnrc file exists. Create one with -g flag. Modify as needed.')
 
         let templateFile = 'functional.js.hbs'
-        let templatePath = (type, file) => path.join(__dirname, 'lib/templates', type, file)
 
         if (argv.v) {
           const type = 'view'
@@ -149,6 +156,7 @@ fileExists(genrcPath)
             mkdir(path.dirname(dest))
             .then(hb.compile(require(source)(hbData)))
             .then(code => writeFile(dest, code))
+              .then(() => logSuccess(type, dest))
           })
         }
 
@@ -176,34 +184,18 @@ fileExists(genrcPath)
             mkdir(path.dirname(dest))
               .then(() => hb.compile(require(source)(hbData))())
               .then(code => writeFile(dest, code))
+              .then(() => logSuccess(type, dest))
           })
         }
       }
 
       if (exists) {
-        readFile(genrcPath).then(d => {
+        readFile(jinnrcPath).then(d => {
           const data = JSON.parse(d)
           const { viewFolder, stateFolder } = data
 
           viewPath = viewFolder
           statePath = stateFolder
-
-          if (argv.h || argv.help) {
-            console.log(helpText)
-          }
-
-          if (argv.g) {
-            console.log('Writing genrc with defaults at ', `${appRoot}/.genrc`)
-            writeFile(genrcPath, JSON.stringify(genrcDefault), 'utf-8')
-          }
-
-          const destPath = (type, name) => {
-            switch (type) {
-              case 'view': return path.join(viewPath, name)
-              case 'state':
-              default: return path.join(statePath, name)
-            }
-          }
 
           if (argv.v || argv.d) {
             hb.registerHelper('upperCase', changeCase.upperCase)
@@ -213,7 +205,6 @@ fileExists(genrcPath)
           }
 
           let templateFile = 'functional.js.hbs'
-          let templatePath = (type, file) => path.join(__dirname, 'lib/templates', type, file)
 
           if (argv.v) {
             const type = 'view'
@@ -260,6 +251,7 @@ fileExists(genrcPath)
               mkdir(path.dirname(dest))
               .then(hb.compile(require(source)(hbData)))
               .then(code => writeFile(dest, code))
+              .then(() => logSuccess(type, dest))
             })
           }
 
@@ -275,7 +267,7 @@ fileExists(genrcPath)
               { source: templatePath(type, 'reducer.js.hbs'), dest: destPath(type, `${name}/reducer.js`) },
               { source: templatePath(type, 'test.js.hbs'), dest: destPath(type, `${name}/test.js`) }
             ]
-            // console.log('FROM WITHIN', destPath(type, name))
+
             if (argv.r || argv.a) {
               selectorFile = 'reselectors.js.hbs'
               filesToWrite.push({ source: templatePath(type, selectorFile), dest: destPath(type, `${name}/selectors.js`) })
@@ -284,10 +276,10 @@ fileExists(genrcPath)
             }
 
             filesToWrite.forEach(({ source, dest }) => {
-              console.log('Writing to ', dest)
               mkdir(path.dirname(dest))
                 .then(() => hb.compile(require(source)(hbData))())
                 .then(code => writeFile(dest, code))
+              .then(() => logSuccess(type, dest))
             })
           }
         })
