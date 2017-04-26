@@ -13,6 +13,11 @@
     "jinn": "cli.js"
   },
   "scripts": {
+    "preversion": "npm run build",
+    "prebuild": "npm install",
+    "build": "npm prune --production",
+    "bump": "bump --prompt --commit --push",
+    "postbump": "editme -w",
     "test": "NODE_ENV=TEST mocha --opts ./mocha.opts './lib/**/*.test.js'",
     "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore",
@@ -20,9 +25,11 @@
     "watch": "npm test --watch"
   },
   "dependencies": {
-    "app-root-dir": "^1.0.2",
-    "inquirer": "^3.0.6",
-    "node-plop": "^0.5.5",
+    "app-root-path": "^2.0.1",
+    "chalk": "^1.1.3",
+    "change-case": "^3.0.1",
+    "inquirer-directory": "^2.1.0",
+    "minimist": "^1.2.0",
     "plop": "^1.7.4"
   },
   "babel": {
@@ -58,8 +65,10 @@
     }
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.2",
     "chai": "^3.5.0",
+    "editme": "1.1",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "2.2.0",
@@ -67,6 +76,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "version-bump-prompt": "^3.1.0"
   }
 }
