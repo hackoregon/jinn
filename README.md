@@ -1,6 +1,6 @@
 ### Jinn
 ---
-Jinn is a boilerplate generator for react components and redux ducks.
+###### v 0.2.2
 Thanks to node-plop & plop, this cli boilerplate generator also has prompts via inquirer.
 
 #### Install
