@@ -10,7 +10,7 @@
     "url": "https://github.com/hackoregon/jinn"
   },
   "bin": {
-    "jinn": "cli.js"
+    "jinn": "bin/cli.js"
   },
   "scripts": {
     "preversion": "npm run build",

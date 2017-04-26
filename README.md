@@ -1,10 +1,20 @@
 ### Jinn
 ---
 ###### v 0.2.3
+
+><img src="icon/djinn.png" alt="djinn" style="width:120px">
+
+
+Jinn is a command line tool to generate react & redux boilerplate.
 Thanks to node-plop & plop, this cli boilerplate generator also has prompts via inquirer.
 
 #### Install
-` $ npm install @hackoregon/jinn --save-dev`
+```bash
+# install globally
+$ npm install @hackoregon/jinn -g
+# or as a dependency for use with npm scripts
+$ npm install @hackoregon/jinn --save-dev
+```
 
 #### Docs
 ```bash
