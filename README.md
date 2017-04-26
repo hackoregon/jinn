@@ -1,6 +1,6 @@
 ### Jinn
 ---
-###### v 0.2.3
+###### v 0.2.4
 
 ><img src="icon/djinn.png" alt="djinn" style="width:120px">
 
