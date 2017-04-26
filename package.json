@@ -1,6 +1,6 @@
 {
   "name": "@hackoregon/jinn",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Deals with boilerplate for react redux projects",
   "main": "lib/index.js",
   "author": "David Daniel",
